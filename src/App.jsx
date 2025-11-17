@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import PromptBuilder from './components/PromptBuilder'
 import Editor from './components/Editor'
 import Runner from './components/Runner'
 import ChatBot from './components/ChatBot'
+import KeyConnect from './components/KeyConnect'
 
 export default function App() {
   const [files, setFiles] = useState([{
@@ -11,6 +12,23 @@ export default function App() {
   }])
   const [loading, setLoading] = useState(false)
   const [model, setModel] = useState(null)
+  const baseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000'
+  const [connected, setConnected] = useState(false)
+
+  useEffect(() => {
+    // check status on load
+    const check = async () => {
+      try {
+        const res = await fetch(`${baseUrl}/llm/status`)
+        if (res.ok) {
+          const data = await res.json()
+          setConnected(Boolean(data.connected))
+          setModel(data.model)
+        }
+      } catch {}
+    }
+    check()
+  }, [baseUrl])
 
   const updateFile = (path, content) => {
     setFiles(prev => prev.map(f => f.path === path ? { ...f, content } : f))
@@ -25,9 +43,12 @@ export default function App() {
   }
 
   const onGenerate = async (prompt) => {
+    if (!connected) {
+      alert('Please connect your Gemini API key first.')
+      return
+    }
     setLoading(true)
     try {
-      const baseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000'
       const res = await fetch(`${baseUrl}/llm/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -61,7 +82,13 @@ export default function App() {
           <div className="text-right text-xs text-gray-500">Model: {model || 'gemini-1.5-flash'}<br/>Files: {fileSummary}</div>
         </header>
 
-        <PromptBuilder onGenerate={onGenerate} loading={loading} />
+        {/* Connection panel */}
+        <KeyConnect baseUrl={baseUrl} onConnected={() => setConnected(true)} />
+
+        {/* Prompt builder disabled until connected */}
+        <div className={!connected ? 'opacity-60 pointer-events-none' : ''}>
+          <PromptBuilder onGenerate={onGenerate} loading={loading} />
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Editor
@@ -71,7 +98,9 @@ export default function App() {
           />
           <div className="space-y-6">
             <Runner files={files} />
-            <ChatBot files={files} onApply={applyFiles} />
+            <div className={!connected ? 'opacity-60 pointer-events-none' : ''}>
+              <ChatBot files={files} onApply={applyFiles} />
+            </div>
           </div>
         </div>
       </div>
