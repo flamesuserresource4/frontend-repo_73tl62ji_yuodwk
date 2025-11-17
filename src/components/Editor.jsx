@@ -19,13 +19,13 @@ export default function Editor({ files, onChange, onSave }) {
   }
 
   return (
-    <div className="bg-white/70 backdrop-blur border border-gray-200 rounded-xl overflow-hidden">
-      <div className="flex border-b border-gray-200 bg-gray-50/80">
-        <div className="w-56 border-r border-gray-200 max-h-80 overflow-auto">
+    <div className="rounded-2xl border border-gray-200/60 dark:border-white/10 bg-white/80 dark:bg-white/5 backdrop-blur overflow-hidden shadow-sm">
+      <div className="flex border-b border-gray-200/60 dark:border-white/10 bg-gray-50/80 dark:bg-white/5">
+        <div className="w-56 border-r border-gray-200/60 dark:border-white/10 max-h-80 overflow-auto">
           {files.map(f => (
             <button
               key={f.path}
-              className={`w-full text-left px-3 py-2 text-sm hover:bg-blue-50 ${activePath === f.path ? 'bg-white font-semibold text-blue-700' : 'text-gray-700'}`}
+              className={`w-full text-left px-3 py-2 text-sm hover:bg-blue-50/70 dark:hover:bg-white/10 ${activePath === f.path ? 'bg-white dark:bg-white/5 font-semibold text-blue-700 dark:text-cyan-300' : 'text-gray-700 dark:text-gray-200'}`}
               onClick={() => setActivePath(f.path)}
             >
               {f.path}
@@ -34,14 +34,14 @@ export default function Editor({ files, onChange, onSave }) {
         </div>
         <div className="flex-1">
           <div className="flex items-center justify-between px-3 py-2">
-            <div className="text-xs text-gray-500">Editing: {activePath}</div>
-            <button onClick={handleSave} className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm">Save</button>
+            <div className="text-xs text-gray-500 dark:text-gray-400">Editing: {activePath}</div>
+            <button onClick={handleSave} className="px-3 py-1.5 bg-gradient-to-tr from-blue-600 to-violet-600 hover:brightness-110 text-white rounded-md text-sm">Save</button>
           </div>
           <textarea
             ref={textRef}
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            className="w-full h-80 p-3 font-mono text-sm outline-none resize-none bg-white"
+            className="w-full h-80 p-3 font-mono text-sm outline-none resize-none bg-white dark:bg-[#0b0b0f] text-gray-900 dark:text-gray-100"
             spellCheck={false}
           />
         </div>

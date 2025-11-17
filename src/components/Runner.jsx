@@ -13,7 +13,7 @@ export default function Runner({ files }) {
     if (!html) {
       // Synthesize minimal HTML that loads a script if present
       const jsEntry = files.find(f => f.path.endsWith('main.js') || f.path.endsWith('index.js'))
-      html = `<!DOCTYPE html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Preview</title></head><body><div id=\"app\"></div>${jsEntry ? `<script>${jsEntry.content}</script>` : ''}</body></html>`
+      html = `<!DOCTYPE html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Preview</title></head><body class=\"dark:bg-[#0b0b0f]\"><div id=\"app\"></div>${jsEntry ? `<script>${jsEntry.content}</script>` : ''}</body></html>`
     } else {
       // inline other js/css files by replacing src/href with embedded content when obvious relative links
       files.filter(f => f.path.endsWith('.js') || f.path.endsWith('.css')).forEach(f => {
@@ -30,12 +30,12 @@ export default function Runner({ files }) {
   }, [files])
 
   return (
-    <div className="bg-white/70 backdrop-blur border border-gray-200 rounded-xl overflow-hidden">
-      <div className="flex items-center justify-between px-3 py-2 border-b border-gray-200 bg-gray-50/80">
-        <div className="text-sm text-gray-600">Live Preview</div>
+    <div className="rounded-2xl border border-gray-200/60 dark:border-white/10 bg-white/80 dark:bg-white/5 backdrop-blur overflow-hidden shadow-sm">
+      <div className="flex items-center justify-between px-3 py-2 border-b border-gray-200/60 dark:border-white/10 bg-gray-50/80 dark:bg-white/5">
+        <div className="text-sm text-gray-600 dark:text-gray-200">Live Preview</div>
         <div className="text-xs text-gray-400">In-browser sandbox</div>
       </div>
-      <iframe ref={iframeRef} title="preview" className="w-full h-96 bg-white" sandbox="allow-scripts allow-forms allow-same-origin" srcDoc={srcDoc} />
+      <iframe ref={iframeRef} title="preview" className="w-full h-96 bg-white dark:bg-[#0b0b0f]" sandbox="allow-scripts allow-forms allow-same-origin" srcDoc={srcDoc} />
     </div>
   )
 }

@@ -4,6 +4,7 @@ import Editor from './components/Editor'
 import Runner from './components/Runner'
 import ChatBot from './components/ChatBot'
 import KeyConnect from './components/KeyConnect'
+import ThemeToggle from './components/ThemeToggle'
 
 export default function App() {
   const [files, setFiles] = useState([{
@@ -72,34 +73,49 @@ export default function App() {
   const fileSummary = useMemo(() => files.map(f => f.path).join(', '), [files])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
-      <div className="max-w-7xl mx-auto px-4 py-10 space-y-6">
-        <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-800">Natural Language → Full‑stack App</h1>
-            <p className="text-gray-600">Describe your idea. We generate the project using Gemini and run it in the browser. Edit code and iterate via chat.</p>
+    <div className="min-h-screen bg-white dark:bg-[#0b0b0f] transition-colors">
+      <div className="absolute inset-0 pointer-events-none [mask-image:radial-gradient(40rem_40rem_at_20%_10%,black,transparent)]">
+        <div className="absolute -top-24 -left-24 h-[28rem] w-[28rem] rounded-full bg-gradient-to-br from-blue-500/20 via-cyan-400/10 to-transparent blur-3xl" />
+        <div className="absolute -bottom-24 -right-24 h-[28rem] w-[28rem] rounded-full bg-gradient-to-br from-fuchsia-500/20 via-violet-400/10 to-transparent blur-3xl" />
+      </div>
+      <div className="relative max-w-7xl mx-auto px-4 py-10 space-y-6">
+        <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="space-y-1">
+            <div className="inline-flex items-center gap-2">
+              <span className="h-2.5 w-2.5 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 shadow" />
+              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">Vibe Builder</h1>
+            </div>
+            <p className="text-gray-600 dark:text-gray-300 max-w-2xl">Describe your idea. We generate the project with Gemini and run it instantly. Iterate with inline editing and chat.</p>
           </div>
-          <div className="text-right text-xs text-gray-500">Model: {model || 'gemini-1.5-flash'}<br/>Files: {fileSummary}</div>
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:block text-right text-xs text-gray-500 dark:text-gray-400">
+              <div>Model: {model || 'gemini-1.5-flash'}</div>
+              <div className="truncate max-w-[18rem]">Files: {fileSummary}</div>
+            </div>
+            <ThemeToggle />
+          </div>
         </header>
 
-        {/* Connection panel */}
-        <KeyConnect baseUrl={baseUrl} onConnected={() => setConnected(true)} />
+        <div className="grid gap-6">
+          <div className="rounded-2xl border border-gray-200/60 dark:border-white/10 bg-white/80 dark:bg-white/5 backdrop-blur p-4 sm:p-6 shadow-sm">
+            <KeyConnect baseUrl={baseUrl} onConnected={() => setConnected(true)} />
+          </div>
 
-        {/* Prompt builder disabled until connected */}
-        <div className={!connected ? 'opacity-60 pointer-events-none' : ''}>
-          <PromptBuilder onGenerate={onGenerate} loading={loading} />
-        </div>
+          <div className={!connected ? 'opacity-60 pointer-events-none' : ''}>
+            <PromptBuilder onGenerate={onGenerate} loading={loading} />
+          </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Editor
-            files={files}
-            onChange={updateFile}
-            onSave={save}
-          />
-          <div className="space-y-6">
-            <Runner files={files} />
-            <div className={!connected ? 'opacity-60 pointer-events-none' : ''}>
-              <ChatBot files={files} onApply={applyFiles} />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Editor
+              files={files}
+              onChange={updateFile}
+              onSave={save}
+            />
+            <div className="space-y-6">
+              <Runner files={files} />
+              <div className={!connected ? 'opacity-60 pointer-events-none' : ''}>
+                <ChatBot files={files} onApply={applyFiles} />
+              </div>
             </div>
           </div>
         </div>

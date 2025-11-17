@@ -26,25 +26,25 @@ export default function ChatBot({ files, onApply }) {
       onApply(data.files)
       setMessages(prev => [...prev, { role: 'assistant', content: 'Applied updates to the project files.' }])
     } catch (e) {
-      setMessages(prev => [...prev, { role: 'assistant', content: `Error: ${e.message}` }])
+      setMessages(prev => [...prev, { role: 'assistant', content: `Error: ${e.message}` }])]
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="bg-white/70 backdrop-blur border border-gray-200 rounded-xl overflow-hidden">
-      <div className="px-4 py-3 border-b border-gray-200 bg-gray-50/80 font-semibold text-gray-700">Assistant</div>
+    <div className="rounded-2xl border border-gray-200/60 dark:border-white/10 bg-white/80 dark:bg-white/5 backdrop-blur overflow-hidden shadow-sm">
+      <div className="px-4 py-3 border-b border-gray-200/60 dark:border-white/10 bg-gray-50/80 dark:bg-white/5 font-semibold text-gray-700 dark:text-gray-200">Assistant</div>
       <div className="h-64 overflow-auto p-4 space-y-3 text-sm">
         {messages.map((m, i) => (
           <div key={i} className={m.role === 'user' ? 'text-right' : ''}>
-            <span className={`inline-block px-3 py-2 rounded-lg ${m.role === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-800'}`}>{m.content}</span>
+            <span className={`inline-block px-3 py-2 rounded-lg ${m.role === 'user' ? 'bg-gradient-to-tr from-blue-600 to-cyan-500 text-white' : 'bg-gray-100 dark:bg-white/10 text-gray-800 dark:text-gray-100'}`}>{m.content}</span>
           </div>
         ))}
       </div>
-      <div className="p-3 border-t border-gray-200 flex gap-2">
-        <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask for a feature..." className="flex-1 border border-gray-300 rounded-md px-3 py-2" />
-        <button onClick={send} disabled={loading} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white rounded-md">{loading ? 'Thinking...' : 'Send'}</button>
+      <div className="p-3 border-t border-gray-200/60 dark:border-white/10 flex gap-2">
+        <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask for a feature..." className="flex-1 border border-gray-300 dark:border-white/15 rounded-md px-3 py-2 bg-white dark:bg-white/5 text-gray-900 dark:text-white placeholder:text-gray-400" />
+        <button onClick={send} disabled={loading} className="px-4 py-2 bg-gradient-to-tr from-blue-600 to-violet-600 hover:brightness-110 disabled:opacity-60 text-white rounded-md">{loading ? 'Thinking...' : 'Send'}</button>
       </div>
     </div>
   )
