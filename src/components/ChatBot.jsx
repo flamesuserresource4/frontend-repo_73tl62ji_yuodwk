@@ -26,7 +26,7 @@ export default function ChatBot({ files, onApply }) {
       onApply(data.files)
       setMessages(prev => [...prev, { role: 'assistant', content: 'Applied updates to the project files.' }])
     } catch (e) {
-      setMessages(prev => [...prev, { role: 'assistant', content: `Error: ${e.message}` }])]
+      setMessages(prev => [...prev, { role: 'assistant', content: `Error: ${e.message}` }])
     } finally {
       setLoading(false)
     }
